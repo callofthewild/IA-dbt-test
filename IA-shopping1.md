@@ -53,6 +53,33 @@ sunbeam>SELECT COUNT(ostatus), ostatus, SUM(oamount)
 ```
 
 3. Display top 3 products that produce highest revenue (quantity \* rate).
+
+```SQL
+SELECT p.pid, p.pname, p.prate, SUM(oi.pqty), p.prate * SUM(oi.pqty) AS total
+FROM products AS p
+INNER JOIN order_items AS oi
+ON oi.pid = p.pid
+GROUP BY p.pid, p.pname, p.prate
+ORDER BY total DESC
+LIMIT 3;
+
+sunbeam>SELECT p.pid, p.pname, p.prate, SUM(oi.pqty), p.prate * SUM(oi.pqty) AS total
+    -> FROM products AS p
+    -> INNER JOIN order_items AS oi
+    -> ON oi.pid = p.pid
+    -> GROUP BY p.pid, p.pname, p.prate
+    -> ORDER BY total DESC
+    -> LIMIT 3;
++------+-----------+-------+--------------+-------+
+| pid  | pname     | prate | SUM(oi.pqty) | total |
++------+-----------+-------+--------------+-------+
+|    4 | Notebook  |    60 |           14 |   840 |
+|    6 | Marker    |    30 |           15 |   450 |
+|    5 | SketchPen |    25 |           10 |   250 |
++------+-----------+-------+--------------+-------+
+3 rows in set (0.01 sec)
+```
+
 4. Find total number of orders by customer John, Mac and Donald.
 5. Mark last order of John as Delivered.
 6. Display the customer name and their total order amount where order status is
