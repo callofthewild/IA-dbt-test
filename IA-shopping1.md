@@ -184,8 +184,29 @@ sunbeam>SELECT * FROM orders;
 9 rows in set (0.00 sec)
 ```
 
-8. Display pins and cities of all customers whose name start and end with a
-   vowel (a, e, i, o, u).
-9. Display cities, number of orders and total amount of orders from cities in asc
-   order of city name.
+8. Display pins and cities of all customers whose name start and end with a vowel (a, e, i, o, u).
+
+```SQL
+SELECT c.cname, c.cpin, cp.city
+FROM customers AS c
+INNER JOIN city_pin AS cp
+ON c.cpin = cp.pin
+WHERE LEFT(LOWER(c.cname), 1) IN ('a', 'e', 'i', 'o', 'u')
+AND RIGHT(LOWER(c.cname), 1) IN ('a', 'e', 'i', 'o', 'u');
+
+sunbeam>SELECT c.cname, c.cpin, cp.city
+    -> FROM customers AS c
+    -> INNER JOIN city_pin AS cp
+    -> ON c.cpin = cp.pin
+    -> WHERE LEFT(LOWER(c.cname), 1) IN ('a', 'e', 'i', 'o', 'u')
+    -> AND RIGHT(LOWER(c.cname), 1) IN ('a', 'e', 'i', 'o', 'u');
++--------+--------+--------+
+| cname  | cpin   | city   |
++--------+--------+--------+
+| Ileana | 400027 | Mumbai |
++--------+--------+--------+
+1 row in set (0.00 sec)
+```
+
+9. Display cities, number of orders and total amount of orders from cities in asc order of city name.
 10. Print total order amount from each city in descending order of amount.
