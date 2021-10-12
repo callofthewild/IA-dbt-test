@@ -81,7 +81,50 @@ sunbeam>SELECT p.pid, p.pname, p.prate, SUM(oi.pqty), p.prate * SUM(oi.pqty) AS 
 ```
 
 4. Find total number of orders by customer John, Mac and Donald.
+
+```SQL
+SELECT oid, odate, ostatus, oamount, cid, COUNT(oid)
+FROM orders
+WHERE orders.cid IN
+    (SELECT cid FROM customers
+    WHERE cname IN ('John', 'Mac', 'Donald'))
+GROUP BY oid;
+```
+
 5. Mark last order of John as Delivered.
+
+```SQL
+UPDATE orders
+SET ostatus = 'delivered'
+WHERE cid =
+    (SELECT cid FROM customers
+    WHERE cname = 'John');
+
+sunbeam>UPDATE orders
+    -> SET ostatus = 'delivered'
+    -> WHERE cid =
+    ->     (SELECT cid FROM customers
+    ->     WHERE cname = 'John');
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+sunbeam>select * from orders;
++-----+------------+------------+---------+------+
+| oid | odate      | ostatus    | oamount | cid  |
++-----+------------+------------+---------+------+
+|   1 | 2021-10-02 | delivered  |  150.00 |  101 |
+|   2 | 2021-10-02 | dispatched |   50.00 |  102 |
+|   3 | 2021-10-03 | dispatched |  450.00 |  104 |
+|   4 | 2021-10-03 | delivered  |  450.00 |  119 |
+|   5 | 2021-10-02 | delivered  |  100.00 |  105 |
+|   6 | 2021-10-05 | delivered  |  150.00 |  108 |
+|   7 | 2021-10-02 | delivered  |  350.00 |  108 |
+|   8 | 2021-10-01 | dispatched |   90.00 |  103 |
+|   9 | 2021-10-01 | pending    |  130.00 |  107 |
++-----+------------+------------+---------+------+
+9 rows in set (0.05 sec)
+```
+
 6. Display the customer name and their total order amount where order status is
    delivered and total is more than 300
 7. Update the last order of Adam from Pending to dispatch and then dispatch to
