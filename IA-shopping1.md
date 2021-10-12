@@ -152,8 +152,38 @@ sunbeam>SELECT c.cname, SUM(o.oamount)
 2 rows in set (0.00 sec)
 ```
 
-7. Update the last order of Adam from Pending to dispatch and then dispatch to
-   Delivered (in two different queries).
+7. Update the last order of Adam from Pending to dispatch and then dispatch to Delivered (in two different queries).
+
+```SQL
+UPDATE orders
+SET ostatus = 'dispatched'
+WHERE cid =
+    (SELECT cid FROM customers
+    WHERE cname = 'Adam');
+
+UPDATE orders
+SET ostatus = 'delivered'
+WHERE cid =
+    (SELECT cid FROM customers
+    WHERE cname = 'Adam');
+
+sunbeam>SELECT * FROM orders;
++-----+------------+------------+---------+------+
+| oid | odate      | ostatus    | oamount | cid  |
++-----+------------+------------+---------+------+
+|   1 | 2021-10-02 | delivered  |  150.00 |  101 |
+|   2 | 2021-10-02 | dispatched |   50.00 |  102 |
+|   3 | 2021-10-03 | dispatched |  450.00 |  104 |
+|   4 | 2021-10-03 | delivered  |  450.00 |  119 |
+|   5 | 2021-10-02 | delivered  |  100.00 |  105 |
+|   6 | 2021-10-05 | delivered  |  150.00 |  108 |
+|   7 | 2021-10-02 | delivered  |  350.00 |  108 |
+|   8 | 2021-10-01 | dispatched |   90.00 |  103 |
+|   9 | 2021-10-01 | delivered  |  130.00 |  107 |
++-----+------------+------------+---------+------+
+9 rows in set (0.00 sec)
+```
+
 8. Display pins and cities of all customers whose name start and end with a
    vowel (a, e, i, o, u).
 9. Display cities, number of orders and total amount of orders from cities in asc
