@@ -125,8 +125,33 @@ sunbeam>select * from orders;
 9 rows in set (0.05 sec)
 ```
 
-6. Display the customer name and their total order amount where order status is
-   delivered and total is more than 300
+6. Display the customer name and their total order amount where order status is delivered and total is more than 300
+
+```SQL
+SELECT c.cname, SUM(o.oamount)
+FROM customers AS c
+INNER JOIN orders AS o
+ON o.cid = c.cid
+WHERE o.ostatus = 'delivered'
+GROUP BY o.cid, c.cname
+HAVING SUM(oamount) > 300;
+
+sunbeam>SELECT c.cname, SUM(o.oamount)
+    -> FROM customers AS c
+    -> INNER JOIN orders AS o
+    -> ON o.cid = c.cid
+    -> WHERE o.ostatus = 'delivered'
+    -> GROUP BY o.cid, c.cname
+    -> HAVING SUM(oamount) > 300;
++--------+----------------+
+| cname  | SUM(o.oamount) |
++--------+----------------+
+| Millar |         500.00 |
+| Merry  |         450.00 |
++--------+----------------+
+2 rows in set (0.00 sec)
+```
+
 7. Update the last order of Adam from Pending to dispatch and then dispatch to
    Delivered (in two different queries).
 8. Display pins and cities of all customers whose name start and end with a
