@@ -291,3 +291,18 @@ sunbeam>SELECT cp.city, COUNT(oi.oid), SUM(p.prate * oi.pqty)
 ```
 
 10. Print total order amount from each city in descending order of amount.
+
+```SQL
+SELECT cp.city, SUM(p.prate * oi.pqty)
+FROM city_pin AS cp
+INNER JOIN customers AS c
+ON c.cpin = cp.pin
+INNER JOIN orders AS o
+ON o.cid = c.cid
+INNER JOIN order_items AS oi
+ON o.oid = oi.oid
+INNER JOIN products AS p
+ON oi.pid = p.pid
+GROUP BY cp.city
+ORDER BY SUM(p.prate * oi.pqty) DESC;
+```
