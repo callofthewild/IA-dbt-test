@@ -164,7 +164,7 @@ SELECT COALESCE(NULL, NULL, 12, 'Nilesh');
 
 SELECT COALESCE(12.34, NULL, 'Nilesh');
 
--- display comm of emp and if no comm then display sal.
+-- display commission of emp, and if no commission then display sal.
 SELECT ename, comm, sal, COALESCE(comm, sal) FROM emp;
 
 SELECT ename, comm, sal, IF(comm IS NULL, sal, comm) FROM emp;
