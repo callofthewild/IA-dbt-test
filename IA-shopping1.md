@@ -209,4 +209,85 @@ sunbeam>SELECT c.cname, c.cpin, cp.city
 ```
 
 9. Display cities, number of orders and total amount of orders from cities in asc order of city name.
+
+```SQL
+SELECT cp.city, COUNT(cp.city)
+FROM city_pin AS cp
+GROUP BY cp.city
+ORDER BY cp.city ASC;
+
+
+SELECT cp.city, c.cid
+FROM city_pin AS cp
+INNER JOIN customers AS c
+ON c.cpin = cp.pin;
+
+
+SELECT cp.city, c.cid, o.oid
+FROM city_pin AS cp
+INNER JOIN customers AS c
+ON c.cpin = cp.pin
+INNER JOIN orders AS o
+ON o.cid = c.cid;
+
+
+SELECT cp.city, c.cid, o.oid, p.prate
+FROM city_pin AS cp
+INNER JOIN customers AS c
+ON c.cpin = cp.pin
+INNER JOIN orders AS o
+ON o.cid = c.cid
+INNER JOIN order_items AS oi
+ON o.oid = oi.oid
+INNER JOIN products AS p
+ON oi.pid = p.pid;
+
+
+SELECT cp.city, COUNT(oi.oid)
+FROM city_pin AS cp
+INNER JOIN customers AS c
+ON c.cpin = cp.pin
+INNER JOIN orders AS o
+ON o.cid = c.cid
+INNER JOIN order_items AS oi
+ON o.oid = oi.oid
+INNER JOIN products AS p
+ON oi.pid = p.pid
+GROUP BY cp.city;
+
+SELECT cp.city, COUNT(oi.oid), SUM(p.prate * oi.pqty)
+FROM city_pin AS cp
+INNER JOIN customers AS c
+ON c.cpin = cp.pin
+INNER JOIN orders AS o
+ON o.cid = c.cid
+INNER JOIN order_items AS oi
+ON o.oid = oi.oid
+INNER JOIN products AS p
+ON oi.pid = p.pid
+GROUP BY cp.city
+ORDER BY cp.city ASC;
+
+sunbeam>SELECT cp.city, COUNT(oi.oid), SUM(p.prate * oi.pqty)
+    -> FROM city_pin AS cp
+    -> INNER JOIN customers AS c
+    -> ON c.cpin = cp.pin
+    -> INNER JOIN orders AS o
+    -> ON o.cid = c.cid
+    -> INNER JOIN order_items AS oi
+    -> ON o.oid = oi.oid
+    -> INNER JOIN products AS p
+    -> ON oi.pid = p.pid
+    -> GROUP BY cp.city
+    -> ORDER BY cp.city ASC;
++--------+---------------+------------------------+
+| city   | COUNT(oi.oid) | SUM(p.prate * oi.pqty) |
++--------+---------------+------------------------+
+| Karad  |             5 |                    630 |
+| Mumbai |             5 |                    600 |
+| Pune   |             4 |                    240 |
++--------+---------------+------------------------+
+3 rows in set (0.00 sec)
+```
+
 10. Print total order amount from each city in descending order of amount.
